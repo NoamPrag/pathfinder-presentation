@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from functools import reduce
 
-from manim import CubicBezier
+import numpy as np
+from manim import *
 
 from utils.bernstein import get_bernstein
+from utils.utils import complex_to_array
 
 
 class Bezier:
@@ -77,3 +79,9 @@ class Bezier:
             end_handle=manim_bezier_points[2],
             end_anchor=manim_bezier_points[3],
         )
+
+    def parametric_function(self):
+        def points(t):
+            return np.array((self.evaluate(t).real, self.evaluate(t).imag, 0))
+
+        return ParametricFunction(points)

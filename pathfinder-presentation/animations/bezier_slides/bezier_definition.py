@@ -29,14 +29,15 @@ class BezierDefinition(PresentationScene):
         self.play(Create(line))
         self.end_fragment()
 
-        b_equation = MathTex("b(s) = (1-s)P_0 + sP_1", substrings_to_isolate=["b", "s"])
-        b_equation.set_color_by_tex("b", BLUE)
+        b_equation = MathTex("B(s) = (1-s)P_0 + sP_1", substrings_to_isolate=["B", "s"])
+        b_equation.set_color_by_tex("B", BLUE)
         b_equation.set_color_by_tex("s", RED)
         b_equation.shift(UP*2.5)
         self.play(Write(b_equation))
         self.end_fragment()
 
-        s_eq_tex = Tex("s =")
+        s_eq_tex = MathTex("s =", substrings_to_isolate=["s"])
+        s_eq_tex.set_color_by_tex("s", RED)
         s_eq_tex.shift(RIGHT*4)
         s_eq_tex.shift(UP*1)
         s_value_text = DecimalNumber(0.5)
@@ -48,8 +49,8 @@ class BezierDefinition(PresentationScene):
         bezier_value.add_updater(
             lambda b: b.move_to(complex_to_array(s_tracker.get_value()*p1 + (1-s_tracker.get_value())*p0)),
         )
-        dot_title = Tex("b(s)", substrings_to_isolate=["b", "s"])
-        dot_title.set_color_by_tex("b", BLUE)
+        dot_title = Tex("B(s)", substrings_to_isolate=["B", "s"])
+        dot_title.set_color_by_tex("B", BLUE)
         dot_title.set_color_by_tex("s", RED)
         dot_title.next_to(bezier_value, DOWN*0.5+RIGHT*0.5)
         dot_title.add_updater(lambda title: title.next_to(bezier_value, DOWN*0.5+RIGHT*0.5))
