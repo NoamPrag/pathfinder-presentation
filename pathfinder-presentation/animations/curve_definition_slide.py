@@ -62,3 +62,27 @@ class CurveDefinition(PresentationScene):
         self.wait(0.25)
         self.play(t_tracker.animate.set_value(0.7))
         self.end_fragment()
+
+        curve_equation_with_s = Tex(r"c(s)=(x,\:y)")
+        curve_equation_with_s.shift(UP*2.5)
+        curve_equation_with_s.shift(LEFT*1.5)
+
+        s_range_tex = Tex(r"\[ 0\leq s\leq 1 \]")
+        s_range_tex.shift(UP*2.5)
+        s_range_tex.shift(RIGHT*1.5)
+
+        s_text = Tex(r"s =")
+        s_text.shift(RIGHT*4.5)
+        s_text.shift(UP*1)
+
+        self.play(
+            Transform(curve_equation, curve_equation_with_s),
+            Transform(t_range_tex, s_range_tex),
+            Transform(t_text, s_text),
+        )
+        self.end_fragment()
+
+        self.play(t_tracker.animate.set_value(0.9))
+        self.wait(0.25)
+        self.play(t_tracker.animate.set_value(0.1))
+        self.end_fragment()
