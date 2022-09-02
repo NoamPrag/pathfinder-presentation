@@ -1,8 +1,6 @@
 from manim import *
 from manim_revealjs import PresentationScene
 
-from utils.bezier import Bezier
-
 config.video_dir = "./videos"
 
 class BezierSlide(PresentationScene):
