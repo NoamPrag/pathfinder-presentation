@@ -30,3 +30,8 @@ share/python-wheels/
 MANIFEST
 __pycache__
 .DS_Store
+*.log
+*.tex
+*.aux
+*.dvi
+*.svg
