@@ -6,7 +6,7 @@ import numpy as np
 from manim import *
 
 from utils.bernstein import get_bernstein
-from utils.utils import complex_to_array
+from utils.utils import dot_from_complex, lerp, line_from_complex
 
 
 class Bezier:
@@ -43,7 +43,12 @@ class Bezier:
         return Bezier([point + translation for point in self.points])
 
     def scale(self, factor: float) -> Bezier:
-        return Bezier([point * factor for point in self.points])
+        if len(self.points) == 0: return Bezier([])
+
+        new_points: list[complex] = [self.points[0]]
+        for point in self.points[1:]:
+            new_points.append(lerp(self.points[0], point, factor))
+        return Bezier(new_points)
     
     def distanced_points(self, distance: float) -> list[complex]:
         derivative: Bezier = self.derivative()
@@ -85,3 +90,20 @@ class Bezier:
             return np.array((self.evaluate(t).real, self.evaluate(t).imag, 0))
 
         return ParametricFunction(points)
+
+    def dots(self) -> list[Dot]:
+        return [dot_from_complex(z) for z in self.points]
+
+    def lines(self) -> list[Line]:
+        lines_between_dots: list[Line] = []
+        for i, point in enumerate(self.points[1:]):
+            lines_between_dots.append(line_from_complex(start=self.points[i], end=point))
+        return lines_between_dots
+
+    @staticmethod
+    def sub_points(points: list[complex], t: float) -> list[list[complex]]:
+        if len(points) <= 1: return [points] # base case
+
+        sub_points = [lerp(start, end, t) for start, end in zip(points, points[1:])]
+
+        return [sub_points, *Bezier.sub_points(sub_points, t)]
