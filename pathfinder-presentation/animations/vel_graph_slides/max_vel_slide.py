@@ -20,7 +20,7 @@ class MaxVelSlide(PresentationScene):
             x_range = [0, 12, 0.5],
             y_range = [0, 4.5, 0.5],
             y_axis_config={"include_numbers": True},
-            x_length=11
+            x_length=9
         )
         # Labels for the x-axis and y-axis.
         y_label = ax.get_y_axis_label(r"v [\frac{m}{s}]", direction=1.5*UP+3*LEFT)
