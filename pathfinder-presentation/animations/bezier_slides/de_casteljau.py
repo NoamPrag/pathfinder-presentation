@@ -1,8 +1,5 @@
 from manim import *
 from manim_revealjs import PresentationScene
-from utils.bezier import Bezier
-from utils.utils import (complex_to_array, connect_the_dots, create_all,
-                         dot_from_complex)
 
 config.video_dir = "./videos"
 
