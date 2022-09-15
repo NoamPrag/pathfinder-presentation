@@ -26,10 +26,10 @@ class Kinematics(PresentationScene):
         return eq
 
     def linear_vel_graph(self, ax: Axes) -> Graph:
-        return ax.plot(lambda t: t*CONSTANT_ACCELERATION).set_color(RED)
+        return ax.plot(lambda t: t*CONSTANT_ACCELERATION).set_color(colors["v"])
     
     def constant_acc_graph(self, ax: Axes) -> Graph:
-        return ax.plot(lambda _: CONSTANT_ACCELERATION*6).set_color(BLUE)
+        return ax.plot(lambda _: CONSTANT_ACCELERATION*6).set_color(colors["a"])
 
     def linear_acc_eq(self):
         eq = MathTex(r"a(t) = a_0 + jt")
@@ -76,8 +76,6 @@ class Kinematics(PresentationScene):
         return eq
     
     def construct(self):
-
-
         ax = Axes(
             x_range = [0, 12, 0.5],
             y_range = [0, 4.5, 0.5],
