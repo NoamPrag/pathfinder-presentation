@@ -24,7 +24,7 @@ class MaxVelSlide(PresentationScene):
         )
         # Labels for the x-axis and y-axis.
         y_label = ax.get_y_axis_label(r"v [\frac{m}{s}]", direction=1.5*UP+3*LEFT)
-        x_label = ax.get_x_axis_label(r"t [s]", direction=1.25*RIGHT+0.05*DOWN)
+        x_label = ax.get_x_axis_label(r"d [m]", direction=1.25*RIGHT+0.05*DOWN)
         ax_labels = VGroup(x_label, y_label)
 
         self.play(DrawBorderThenFill(ax), Create(ax_labels))
