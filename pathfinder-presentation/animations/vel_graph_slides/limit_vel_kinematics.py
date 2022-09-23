@@ -7,7 +7,7 @@ from manim_revealjs import PresentationScene
 config.video_dir = "./videos"
 
 trajectory: list[TrajectoryPoint] = create_trajectory_list(example_path)
-limit_vel_kinematics(trajectory)
+calculate_kinematics(trajectory, acc_forward=False)
 
 class LimitVelKinematics(PresentationScene):
     def construct(self):
@@ -48,7 +48,7 @@ class LimitVelKinematics(PresentationScene):
         self.end_fragment()
 
         trajectory = reverse_trajectory(trajectory)
-        limit_vel_kinematics(trajectory)
+        calculate_kinematics(trajectory, acc_forward=False)
 
         dots = get_vel_graph_points(trajectory, ax, dt=0.005)
         dot_group = VGroup()

@@ -65,7 +65,7 @@ def get_first_point(distance: float) -> TrajectoryPoint:
     )
 
 
-def limit_vel_kinematics(trajectory: list[TrajectoryPoint]):
+def calculate_kinematics(trajectory: list[TrajectoryPoint], acc_forward: bool):
     trajectory[0].vel = 0
     trajectory[0].acc = 0
 
@@ -85,6 +85,11 @@ def limit_vel_kinematics(trajectory: list[TrajectoryPoint]):
 
         # TODO: check acc increasing while velocity limited by segment's max vel
         curr_point.acc = min(prev_point.acc + delta_t * MAX_JERK, MAX_ACC)
+
+        if acc_forward:
+            max_acc_forward = MAX_ACC * (1 - prev_point.vel/MAX_VEL)
+            curr_point.acc = min(curr_point.acc, max_acc_forward)
+        
         kinematic_vel = prev_point.vel + prev_point.acc * delta_t
         if curr_point.vel < kinematic_vel:
             curr_point.acc = 0
