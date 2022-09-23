@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from utils.bezier import Bezier
@@ -17,6 +19,17 @@ class TrajectoryPoint:
     acc: float = 0
     heading: float = 0
     omega: float = 0
+
+    def clone(self) -> TrajectoryPoint:
+        return TrajectoryPoint(
+            time=self.time,
+            pos=self.pos,
+            distance=self.distance,
+            vel=self.vel,
+            acc=self.acc,
+            heading=self.heading,
+            omega=self.omega,
+        )
 
 DELTA_DISTANCE_FOR_EVALUATION = 1e-4
 
@@ -53,6 +66,9 @@ def get_first_point(distance: float) -> TrajectoryPoint:
 
 
 def limit_vel_kinematics(trajectory: list[TrajectoryPoint]):
+    trajectory[0].vel = 0
+    trajectory[0].acc = 0
+
     first_point = get_first_point(trajectory[1].distance)
     trajectory[1].time = first_point.time
     trajectory[1].vel = first_point.vel
@@ -80,3 +96,17 @@ def search_for_time(trajectory: list[TrajectoryPoint], time: float, last_search_
         if point.time >= time: return i + last_search_index
 
     return -1
+
+def reverse_trajectory(trajectory: list[TrajectoryPoint]) -> list[TrajectoryPoint]:
+    total_distance = max(trajectory[0].distance, trajectory[-1].distance)
+    total_time = max(trajectory[0].time, trajectory[-1].time)
+
+    reversed_trajectory: list[TrajectoryPoint] = []
+    for point in reversed(trajectory):
+        reversed_point = point.clone()
+        reversed_point.distance = total_distance - point.distance
+        reversed_point.time = total_time - point.time
+
+        reversed_trajectory.append(reversed_point)
+
+    return reversed_trajectory
