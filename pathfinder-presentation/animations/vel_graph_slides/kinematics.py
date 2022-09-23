@@ -77,7 +77,7 @@ class Kinematics(PresentationScene):
     
     def construct(self):
         ax = Axes(
-            x_range = [0, 12, 0.5],
+            x_range = [0, 12, 1],
             y_range = [0, 4.5, 0.5],
             x_length=9
         )

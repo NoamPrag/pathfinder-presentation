@@ -17,9 +17,9 @@ max_velocities = [1.5, 3.83, 2]
 class MaxVelSlide(PresentationScene):
     def construct(self):
         ax = Axes(
-            x_range = [0, 12, 0.5],
+            x_range = [0, 12, 1],
             y_range = [0, 4.5, 0.5],
-            y_axis_config={"include_numbers": True},
+            axis_config={"include_numbers": True},
             x_length=9
         )
         # Labels for the x-axis and y-axis.
