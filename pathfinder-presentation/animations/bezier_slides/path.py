@@ -1,6 +1,6 @@
+from constants import *
 from manim import *
 from manim_revealjs import PresentationScene
-from utils.bezier import Bezier
 
 config.video_dir = "./videos"
 
@@ -14,11 +14,7 @@ class Path(PresentationScene):
         self.write_title()
         self.end_fragment()
 
-        segments: list[Bezier] = [
-            Bezier([0, 1.5j, 0, 0.75]),
-            Bezier([0.75, 2.25, 4.5+3j, 1.5+3j]),
-            Bezier([1.5+3j, -1.5+3j, -1.5+3j, -1.5+1.5j]),
-        ]
+        segments = [seg.bezier for seg in example_path]
         segments = [b.translate(-0.5-1.5j) for b in segments]
         colors = [GREEN, RED, BLUE, ORANGE]
         bezier_fs: list[ParametricFunction] = [b.parametric_function() for b in segments]
@@ -29,7 +25,7 @@ class Path(PresentationScene):
         self.play(Create(bezier_group, run_time=4))
         self.end_fragment() # drawing path
 
-        max_velocities = [1.5, 3.83, 2]
+        max_velocities = [seg.max_vel for seg in example_path]
         max_vels = [MathTex(f"{v}") for v in max_velocities]
         directions = [UP, RIGHT, UP]
         for vel, segment, direction in zip(max_vels, bezier_fs, directions): vel.next_to(segment, direction)

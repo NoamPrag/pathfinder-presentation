@@ -1,23 +1,14 @@
+from constants import *
 from manim import *
 from manim_revealjs import PresentationScene
-from utils.bezier import Bezier
 
 config.video_dir = "./videos"
 
-MAX_VEL = 3.83
-segments: list[Bezier] = [
-    Bezier([0, 1.5j, 0, 0.75]),
-    Bezier([0.75, 2.25, 4.5+3j, 1.5+3j]),
-    Bezier([1.5+3j, -1.5+3j, -1.5+3j, -1.5+1.5j]),
-]
-segments_lengths = [segment.length() for segment in segments]
-segments_colors = colors = [GREEN, RED, BLUE, ORANGE]
-max_velocities = [1.5, 3.83, 2]
 
 class MaxVelSlide(PresentationScene):
     def construct(self):
         ax = Axes(
-            x_range = [0, 12, 1],
+            x_range = [0, path_length+1, 1],
             y_range = [0, 4.5, 0.5],
             axis_config={"include_numbers": True},
             x_length=9
@@ -35,6 +26,8 @@ class MaxVelSlide(PresentationScene):
         self.end_fragment()
 
         self.play(Uncreate(constant_max_vel_graph))
+
+        max_velocities = [seg.max_vel for seg in example_path]
 
         segment_limited_vel_graphs = []
         start_x = 0

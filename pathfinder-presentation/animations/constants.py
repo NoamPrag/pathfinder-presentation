@@ -12,8 +12,11 @@ example_path: list[Segment] = [
     Segment(bezier=Bezier([0.75, 2.25, 4.5+3j, 1.5+3j]), max_vel=3.83),
     Segment(bezier=Bezier([1.5+3j, -1.5+3j, -1.5+3j, -1.5+1.5j]), max_vel=2),
 ]
+path_length = sum([seg.bezier.length() for seg in example_path])
 
 segments_lengths: list[float] = [seg.bezier.length() for seg in example_path]
+
+segments_colors = colors = [GREEN, RED, BLUE]
 
 colors = {
     "x": TEAL,
