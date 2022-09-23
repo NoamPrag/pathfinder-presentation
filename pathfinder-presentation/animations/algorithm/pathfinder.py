@@ -1,0 +1,82 @@
+from dataclasses import dataclass
+
+from utils.bezier import Bezier
+
+
+@dataclass
+class Segment:
+    max_vel: float
+    bezier: Bezier
+
+@dataclass
+class TrajectoryPoint:
+    time: float = 0
+    pos: complex = 0
+    distance: float = 0
+    vel: float = 0
+    acc: float = 0
+    heading: float = 0
+    omega: float = 0
+
+DELTA_DISTANCE_FOR_EVALUATION = 1e-4
+
+MAX_VEL = 3.83
+MAX_ACC = 7.5
+MAX_JERK = 50
+
+def create_trajectory_list(segments: list[Segment]) -> list[TrajectoryPoint]:
+    trajectory: list[TrajectoryPoint] = []
+    first_point = TrajectoryPoint(pos=segments[0].bezier.evaluate(0), distance=0, vel=0, acc=0, time=0)
+    trajectory.append(first_point)
+
+    for segment in segments:
+        segment_points: list[complex] = segment.bezier.distanced_points(DELTA_DISTANCE_FOR_EVALUATION)
+        for pos in segment_points[1:]:
+            prev_point = trajectory[-1]
+            current_point = TrajectoryPoint()
+            current_point.pos = pos
+            current_point.distance = prev_point.distance + abs(pos - prev_point.pos)
+            current_point.vel = segment.max_vel
+
+            trajectory.append(current_point)
+    return trajectory
+
+def get_first_point(distance: float) -> TrajectoryPoint:
+    # x(t) = (1/6)*j*t^3 -> t(x) = (6*x/j)^(1/3)
+	firstPointTime = (6*distance/MAX_JERK) ** (1.0/3.0)
+
+	return TrajectoryPoint(
+		time=firstPointTime,
+		vel=0.5 * MAX_JERK * (firstPointTime ** 2),
+		acc=MAX_JERK * firstPointTime,
+    )
+
+
+def limit_vel_kinematics(trajectory: list[TrajectoryPoint]):
+    first_point = get_first_point(trajectory[1].distance)
+    trajectory[1].time = first_point.time
+    trajectory[1].vel = first_point.vel
+    trajectory[1].acc = first_point.acc
+
+    for i in range(2, len(trajectory)):
+        curr_point = trajectory[i]
+        prev_point = trajectory[i-1]
+
+        delta_dist = curr_point.distance - prev_point.distance
+        delta_t = delta_dist / prev_point.vel # v=∆x/∆t -> ∆t=∆x/v
+
+        curr_point.time = prev_point.time + delta_t
+
+        # TODO: check acc increasing while velocity limited by segment's max vel
+        curr_point.acc = min(prev_point.acc + delta_t * MAX_JERK, MAX_ACC)
+        kinematic_vel = prev_point.vel + prev_point.acc * delta_t
+        if curr_point.vel < kinematic_vel:
+            curr_point.acc = 0
+        else: curr_point.vel = kinematic_vel
+        # curr_point.vel = min(prev_point.vel + prev_point.acc * delta_t, curr_point.vel)
+
+def search_for_time(trajectory: list[TrajectoryPoint], time: float, last_search_index: int) -> int:
+    for i, point in enumerate(trajectory[last_search_index:]):
+        if point.time >= time: return i + last_search_index
+
+    return -1
