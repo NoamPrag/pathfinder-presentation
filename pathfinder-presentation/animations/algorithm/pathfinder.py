@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import inf, sqrt
 
 from utils.bezier import Bezier
+from utils.utils import phase, wrap_angle
 
 
 @dataclass
@@ -95,6 +97,34 @@ def calculate_kinematics(trajectory: list[TrajectoryPoint], acc_forward: bool):
             curr_point.acc = 0
         else: curr_point.vel = kinematic_vel
         # curr_point.vel = min(prev_point.vel + prev_point.acc * delta_t, curr_point.vel)
+
+def calculate_dt(trajectory: list[TrajectoryPoint]):
+    for i in range(2, len(trajectory)-1):
+        curr_point = trajectory[i]
+        prev_point = trajectory[i-1]
+        
+        dt = (curr_point.distance - prev_point.distance) / prev_point.vel
+
+        curr_point.time = prev_point.time + dt
+	
+
+def centrifugal_force(trajectory: list[TrajectoryPoint]):
+    for i in range(1, len(trajectory)-1):
+        curr_point = trajectory[i]
+        prev_point = trajectory[i-1]
+        next_point = trajectory[i+1]
+
+        prev_to_curr = curr_point.pos - prev_point.pos
+        curr_to_next = next_point.pos - curr_point.pos
+
+        dist_to_prev = curr_point.distance - prev_point.distance
+        delta_angle = wrap_angle(phase(curr_to_next) - phase(prev_to_curr))
+
+        drive_radius = abs(dist_to_prev / delta_angle if delta_angle != 0 else inf)
+        max_vel_according_to_centrifugal_force = sqrt(drive_radius * MAX_ACC)
+        curr_point.vel = min(curr_point.vel, max_vel_according_to_centrifugal_force)
+
+    calculate_dt(trajectory)
 
 def search_for_time(trajectory: list[TrajectoryPoint], time: float, last_search_index: int) -> int:
     for i, point in enumerate(trajectory[last_search_index:]):

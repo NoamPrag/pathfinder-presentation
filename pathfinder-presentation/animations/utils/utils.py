@@ -1,7 +1,17 @@
+from math import atan2
 from typing import Tuple
 
 from manim import *
 
+
+def wrap_angle(angle: float) -> float:
+    wrapped = angle % TAU
+    if wrapped > PI: wrapped -= TAU
+    elif wrapped < -PI: wrapped += TAU
+    return wrapped
+
+def phase(z: complex) -> float:
+    return atan2(z.imag, z.real)
 
 def dot_from_complex(z: complex) -> Dot:
     return Dot(complex_to_array(z))

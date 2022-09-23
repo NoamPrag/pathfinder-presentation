@@ -35,7 +35,7 @@ class Path(PresentationScene):
         lengths: list[float] = []
         lines: list[Line] = []
         for bezier in segments:
-            length = bezier.length()
+            length = bezier.length() / 1.5
             start: float = sum(lengths)
             line = Line(
                 (start - 5, -1.5, 0),

@@ -9,8 +9,8 @@ MAX_VEL = 3.83
 
 example_path: list[Segment] = [
     Segment(bezier=Bezier([0, 1.5j, 0, 0.75]), max_vel=1.5),
-    Segment(bezier=Bezier([0.75, 2.25, 4.5+3j, 1.5+3j]), max_vel=3.83),
-    Segment(bezier=Bezier([1.5+3j, -1.5+3j, -1.5+3j, -1.5+1.5j]), max_vel=2),
+    Segment(bezier=Bezier([0.75, 4, 9+2j, 1.5+2j]), max_vel=3.5),
+    Segment(bezier=Bezier([1.5+2j, -1.5+2j, -1.5+3j, -1.5+1.5j]), max_vel=2),
 ]
 path_length = sum([seg.bezier.length() for seg in example_path])
 

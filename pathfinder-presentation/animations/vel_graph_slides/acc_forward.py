@@ -4,12 +4,6 @@ from manim_revealjs import PresentationScene
 
 config.video_dir = "./videos"
 
-# trajectory: list[TrajectoryPoint] = create_trajectory_list(example_path)
-# calculate_kinematics(trajectory, acc_forward=True)
-# trajectory = reverse_trajectory(trajectory)
-# calculate_kinematics(trajectory, acc_forward=False)
-# trajectory = reverse_trajectory(trajectory)
-
 class AccForward(PresentationScene):
     def max_acc_forward_eq(self) -> MathTex:
         eq = MathTex(r"a = a_{max} (1 - \frac{v}{v_{max}})")

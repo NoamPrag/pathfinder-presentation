@@ -133,7 +133,7 @@ class KinematicsAlgorithm(PresentationScene):
 
         x1_eq = self.x1_eq()
         x1_eq.next_to(zero_eq, DOWN)
-        self.play(TransformMatchingShapes(xt_eq, x1_eq))
+        self.play(Transform(xt_eq, x1_eq))
         self.end_fragment() # transforming x(t) to x1
 
         t1_eq = self.t1_eq()

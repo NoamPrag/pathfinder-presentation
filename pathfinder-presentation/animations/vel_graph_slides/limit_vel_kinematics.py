@@ -14,7 +14,7 @@ class LimitVelKinematics(PresentationScene):
         global trajectory
 
         ax = Axes(
-            x_range = [0, 6, 1],
+            x_range = [0, 7, 1],
             y_range = [0, 4.5, 0.5],
             x_length=9,
             axis_config={"include_numbers": True},
