@@ -138,7 +138,7 @@ class KinematicsAlgorithm(PresentationScene):
 
         t1_eq = self.t1_eq()
         t1_eq.next_to(zero_eq, DOWN)
-        self.play(TransformMatchingShapes(x1_eq, t1_eq))
+        self.play(TransformMatchingShapes(xt_eq, t1_eq))
         self.end_fragment() # transforming x1 to t1
 
         a1v1_eq = self.a1v1_eq()

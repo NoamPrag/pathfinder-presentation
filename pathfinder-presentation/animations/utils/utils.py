@@ -1,4 +1,4 @@
-from math import atan2
+from math import atan2, floor, sin
 from typing import Tuple
 
 from manim import *
@@ -12,6 +12,23 @@ def wrap_angle(angle: float) -> float:
 
 def phase(z: complex) -> float:
     return atan2(z.imag, z.real)
+
+def evaluate_bezier_list(t: float, beziers) -> complex:
+    bezier_index: int = floor(t)
+    bezier_s: float = t - bezier_index
+    if t == len(beziers):
+        bezier_index = len(beziers) - 1
+        bezier_s = 1
+    return beziers[bezier_index].evaluate(bezier_s)
+
+def determinant(a: complex, b: complex):
+    return abs(a) * abs(b) * sin(angle_between(a,b))
+    
+
+def angle_between(a: complex, b: complex) -> float:
+    a /= abs(a)
+    b /= abs(b)
+    return phase(a / b)
 
 def dot_from_complex(z: complex) -> Dot:
     return Dot(complex_to_array(z))

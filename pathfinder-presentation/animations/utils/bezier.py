@@ -6,7 +6,7 @@ import numpy as np
 from manim import *
 
 from utils.bernstein import get_bernstein
-from utils.utils import dot_from_complex, lerp, line_from_complex
+from utils.utils import determinant, dot_from_complex, lerp, line_from_complex
 
 
 class Bezier:
@@ -61,7 +61,7 @@ class Bezier:
             points.append(self.evaluate(s))
             s += ds
         return points
-    
+
     # empirical integration with dt
     def length(self, dt = 0.01) -> float:
         points = self.distanced_points(dt)
@@ -73,6 +73,35 @@ class Bezier:
     
     def __len__(self) -> float:
         return self.length()
+
+    def t_for_distance(self, distance: float, delta_distance: float = 1e-3) -> float:
+        distance_accumulator: float = 0
+        t: float = 0
+        derivative = self.derivative()
+        prev_point = self.evaluate(0)
+        while t <= 1:
+            t += delta_distance / abs(derivative.evaluate(t)) 
+
+            curr_point = self.evaluate(t)
+            distance_accumulator += abs(curr_point - prev_point)
+            prev_point = curr_point
+
+            if distance_accumulator >= distance: return t
+
+    def evaluate_by_distance(self, distance: float, delta_distance: float = 1e-3) -> complex:
+        return self.evaluate(self.t_for_distance(distance, delta_distance=delta_distance))
+   
+    def curvature(self, t: float) -> float:
+        derivative = self.derivative()
+        second_derivative = derivative.derivative()
+
+        derivative_at_t = derivative.evaluate(t)
+        second_derivative_at_t = second_derivative.evaluate(t)
+        return determinant(derivative_at_t, second_derivative_at_t) / (abs(derivative_at_t) ** 3)
+
+    def curvature_by_distance(self, distance: float, delta_distance: float = 1e-3) -> float:
+        t: float = self.t_for_distance(distance, delta_distance=delta_distance)
+        return self.curvature(t)
     
     def manim_bezier(self) -> CubicBezier:
         if (self.degree != 3): raise Exception("Bezier must be cubic in order to be converted to manim bezier.")
