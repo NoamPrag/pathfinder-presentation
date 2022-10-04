@@ -28,10 +28,6 @@ class Path:
         index, t_for_bezier = self.get_bezier_index_and_t(t)
         return self.beziers[index].curvature(t_for_bezier)
 
-    def curvature_by_distance(self, t: float) -> float:
-        index, t_for_bezier = self.get_bezier_index_and_t(t)
-        return self.beziers[index].curvature(t_for_bezier)
-
     def derivative(self) -> Path:
         return Path([bezier.derivative() for bezier in self.beziers])
 
