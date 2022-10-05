@@ -70,7 +70,7 @@ class CurvatureSlide(PresentationScene):
             start: complex = path.evaluate(s)
             derivative: complex = path_derivative.evaluate(s)
             curvature: float = path.curvature(s)
-            radius: float = 1 / curvature
+            radius: float = 1 / curvature if curvature != 0 else inf
             end: complex = start + (derivative / abs(derivative) * -1j * radius)
             return Circle(arc_center=complex_to_array(end), radius=radius).set_color(RED)
         circle = always_redraw(get_tangent_circle)

@@ -21,6 +21,7 @@ class TrajectoryPoint:
     acc: float = 0
     heading: float = 0
     omega: float = 0
+    drive_radius: float = 0
 
     def clone(self) -> TrajectoryPoint:
         return TrajectoryPoint(
@@ -31,6 +32,7 @@ class TrajectoryPoint:
             acc=self.acc,
             heading=self.heading,
             omega=self.omega,
+            drive_radius=self.drive_radius
         )
 
 DELTA_DISTANCE_FOR_EVALUATION = 1e-4
@@ -98,6 +100,13 @@ def calculate_kinematics(trajectory: list[TrajectoryPoint], acc_forward: bool):
         else: curr_point.vel = kinematic_vel
         # curr_point.vel = min(prev_point.vel + prev_point.acc * delta_t, curr_point.vel)
 
+def do_kinematics(trajectory: list[TrajectoryPoint]) -> list[TrajectoryPoint]:
+    calculate_kinematics(trajectory, acc_forward=True)
+    trajectory = reverse_trajectory(trajectory)
+    calculate_kinematics(trajectory, acc_forward=False)
+    trajectory = reverse_trajectory(trajectory)
+    return trajectory
+
 def calculate_dt(trajectory: list[TrajectoryPoint]):
     for i in range(2, len(trajectory)-1):
         curr_point = trajectory[i]
@@ -107,6 +116,20 @@ def calculate_dt(trajectory: list[TrajectoryPoint]):
 
         curr_point.time = prev_point.time + dt
 	
+def calculate_curvature(trajectory: list[TrajectoryPoint]):
+    for i in range(1, len(trajectory)-1):
+        curr_point = trajectory[i]
+        prev_point = trajectory[i-1]
+        next_point = trajectory[i+1]
+
+        prev_to_curr = curr_point.pos - prev_point.pos
+        curr_to_next = next_point.pos - curr_point.pos
+
+        dist_to_prev = curr_point.distance - prev_point.distance
+        delta_angle = wrap_angle(phase(curr_to_next) - phase(prev_to_curr))
+
+        drive_radius = abs(dist_to_prev / delta_angle if delta_angle != 0 else inf)
+        curr_point.drive_radius = drive_radius
 
 def centrifugal_force(trajectory: list[TrajectoryPoint]):
     for i in range(1, len(trajectory)-1):
@@ -124,7 +147,7 @@ def centrifugal_force(trajectory: list[TrajectoryPoint]):
         max_vel_according_to_centrifugal_force = sqrt(drive_radius * MAX_ACC)
         curr_point.vel = min(curr_point.vel, max_vel_according_to_centrifugal_force)
 
-    calculate_dt(trajectory)
+    # calculate_dt(trajectory)
 
 def search_for_time(trajectory: list[TrajectoryPoint], time: float, last_search_index: int) -> int:
     for i, point in enumerate(trajectory[last_search_index:]):

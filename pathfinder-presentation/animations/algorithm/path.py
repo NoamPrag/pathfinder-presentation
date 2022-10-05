@@ -9,10 +9,25 @@ class Path:
         self.number_of_beziers = len(beziers)
         self.t_for_each_bezier = 1 / self.number_of_beziers
 
+    def translate(self, translation: complex) -> Path:
+        return Path([bezier.translate(translation) for bezier in self.beziers])
+
+    def scale(self, factor: float) -> Path:
+        if self.number_of_beziers <= 0: return Path()
+
+        scaled_path_beziers = [self.beziers[0].scale(factor)]
+        for bezier in self.beziers[1:]:
+            scaled_bezier = bezier.scale(factor)
+            prev_bezier: Bezier = scaled_path_beziers[-1]
+            scaled_bezier = scaled_bezier.translate(scaled_path_beziers[-1].points[-1] - scaled_bezier.points[0])
+            scaled_path_beziers.append(scaled_bezier)
+
+        return Path(scaled_path_beziers)
+
     def length(self) -> float:
         return sum([bezier.length() for bezier in self.beziers])
 
-    def get_bezier_index_and_t(self, t: float) -> tuple(int, float):
+    def get_bezier_index_and_t(self, t: float) -> tuple[int, float]:
         if t >= 1: return (self.number_of_beziers - 1, 1)
 
         unscaled_t_for_bezier = t % self.t_for_each_bezier
@@ -32,6 +47,7 @@ class Path:
         return Path([bezier.derivative() for bezier in self.beziers])
 
     def t_for_distance(self, distance: float, delta_distance: float = 1e-3) -> float:
+        if distance >= self.length(): return 1
         distance_accumulator: float = 0
         t: float = 0
         derivative = self.derivative()
@@ -47,3 +63,6 @@ class Path:
         
     def evaluate_by_distance(self, distance: float, delta_distance: float = 1e-3) -> complex:
         return self.evaluate(self.t_for_distance(distance, delta_distance=delta_distance))
+       
+    def curvature_by_distance(self, distance: float, delta_distance: float = 1e-3) -> float:
+        return self.curvature(self.t_for_distance(distance, delta_distance=delta_distance))
