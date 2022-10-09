@@ -10,8 +10,6 @@ config.video_dir = "./videos"
 trajectory: list[TrajectoryPoint] = create_trajectory_list(example_path)
 trajectory = do_kinematics(trajectory)
 calculate_curvature(trajectory)
-# centrifugal_force(trajectory)
-# trajectory = do_kinematics(trajectory)
 
 def get_max_vel(point: TrajectoryPoint) -> tuple[float, float]:
     max_vel: float = sqrt(MAX_ACC * point.drive_radius)
@@ -19,31 +17,31 @@ def get_max_vel(point: TrajectoryPoint) -> tuple[float, float]:
     
 class CentrifugalForce(PresentationScene):
     def angular_acc_eq(self) -> MathTex:
-        eq = MathTex(r"a_r = \frac{v^2}{r}")
+        eq = MathTex(r"a_r = \frac{v^2}{R}")
         eq[0][:2].set_color(colors["a"])
         eq[0][-4].set_color(colors["v"])
-        eq[0][-1].set_color(colors["x"])
+        eq[0][-1].set_color(colors["R"])
         return eq
 
     def v_squared_eq(self) -> MathTex:
-        eq = MathTex(r"v^2 = a_r r")
+        eq = MathTex(r"v^2 = a_r R")
         eq[0][0].set_color(colors["v"])
         eq[0][-3:-1].set_color(colors["a"])
-        eq[0][-1].set_color(colors["x"])
+        eq[0][-1].set_color(colors["R"])
         return eq
 
     def v_eq(self) -> MathTex:
-        eq = MathTex(r"v = \sqrt{a_r r}")
+        eq = MathTex(r"v = \sqrt{a_r R}")
         eq[0][0].set_color(colors["v"])
         eq[0][-3:-1].set_color(colors["a"])
-        eq[0][-1].set_color(colors["x"])
+        eq[0][-1].set_color(colors["R"])
         return eq
 
     def max_vel_eq(self) -> MathTex:
-        eq = MathTex(r"v = \sqrt{a_{max} r}")
+        eq = MathTex(r"v = \sqrt{a_{max} R}")
         eq[0][0].set_color(colors["v"])
         eq[0][-5:-1].set_color(colors["a"])
-        eq[0][-1].set_color(colors["x"])
+        eq[0][-1].set_color(colors["R"])
         return eq
 
     def derive_vel_equation(self) -> MathTex:
