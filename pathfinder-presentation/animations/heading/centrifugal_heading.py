@@ -83,7 +83,7 @@ class CentrifugalHeading(PresentationScene):
         self.play(DrawBorderThenFill(ax), Create(ax_labels))
 
         limited_vel_points = generate_graph_points(
-            trajectory, ax, lambda p: (p.time, p.vel), dt=0.005
+            trajectory, ax, lambda p: (p.time, p.vel), dt=0.001
         )
         limited_vel_graph = VGroup()
         for point in limited_vel_points:
