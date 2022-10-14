@@ -164,7 +164,7 @@ def centrifugal_force(trajectory: list[TrajectoryPoint]):
 
 
 def search_for_time(
-    trajectory: list[TrajectoryPoint], time: float, last_search_index: int
+    trajectory: list[TrajectoryPoint], time: float, last_search_index: int = 0
 ) -> int:
     for i, point in enumerate(trajectory[last_search_index:]):
         if point.time >= time:

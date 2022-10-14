@@ -14,7 +14,7 @@ ALLOWED_RIGREON_COLOR = YELLOW
 
 class VelOmegaDiamond(PresentationScene):
     def vel_omega_eq(self) -> MathTex:
-        eq = MathTex(r"v + wr \leq v_{max}")
+        eq = MathTex(r"v + \omega r \leq v_{max}")
         eq[0][0].set_color(colors["v"])
         eq[0][2].set_color(colors["w"])
         eq[0][3].set_color(colors["r"])
@@ -24,9 +24,9 @@ class VelOmegaDiamond(PresentationScene):
     def construct(self):
         plane = NumberPlane()
         ax = Axes(axis_config={"include_ticks": False})
-        x_label = ax.get_x_axis_label(r"v [m/s]", direction=4 * DOWN)
+        x_label = ax.get_x_axis_label(r"v [m/s]", direction=4 * DOWN + 2.5 * LEFT)
         y_label = ax.get_y_axis_label(
-            r"w [\frac{rad}{s}]",
+            r"\omega [\frac{rad}{s}]",
             direction=1.5 * UP + 3 * LEFT,
         )
         ax_labels = VGroup()

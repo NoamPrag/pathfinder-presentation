@@ -4,7 +4,12 @@ from algorithm.path import Path
 from algorithm.pathfinder import *
 
 
-def generate_graph_points(trajectory: list[TrajectoryPoint], ax: Axes, f: Callable[[TrajectoryPoint], tuple[float, float]], dt: float = 0.005) -> list[Dot]:
+def generate_graph_points(
+    trajectory: list[TrajectoryPoint],
+    ax: Axes,
+    f: Callable[[TrajectoryPoint], tuple[float, float]],
+    dt: float = 0.005,
+) -> list[Dot]:
     t: float = 0
     last_search_index: int = 0
     dots: list[Dot] = []
@@ -20,13 +25,22 @@ def generate_graph_points(trajectory: list[TrajectoryPoint], ax: Axes, f: Callab
         t += dt
     return dots
 
-def get_vel_time_graph(trajectory: list[TrajectoryPoint], ax: Axes, dt: float = 0.005) -> VGroup:
+
+def get_vel_time_graph(
+    trajectory: list[TrajectoryPoint], ax: Axes, dt: float = 0.005
+) -> VGroup:
     graph = VGroup()
-    dots: list[Dot] = generate_graph_points(trajectory, ax, lambda p: (p.time, p.vel), dt=dt)
-    for dot in dots: graph.add(dot)
+    dots: list[Dot] = generate_graph_points(
+        trajectory, ax, lambda p: (p.time, p.vel), dt=dt
+    )
+    for dot in dots:
+        graph.add(dot)
     return graph
 
-def get_vel_graph_points(trajectory: list[TrajectoryPoint], ax: Axes, dt: float = 0.005) -> list[Dot]:
+
+def get_vel_graph_points(
+    trajectory: list[TrajectoryPoint], ax: Axes, dt: float = 0.005
+) -> list[Dot]:
     t: float = 0
     last_search_index: int = 0
     dots: list[Dot] = []
@@ -34,11 +48,11 @@ def get_vel_graph_points(trajectory: list[TrajectoryPoint], ax: Axes, dt: float 
         point_index: int = search_for_time(trajectory, t, last_search_index)
         last_search_index = point_index
         dot = Dot(
-            ax.coords_to_point(trajectory[point_index].time,
-            trajectory[point_index].vel),
+            ax.coords_to_point(
+                trajectory[point_index].time, trajectory[point_index].vel
+            ),
             radius=0.03,
         )
         dots.append(dot)
         t += dt
     return dots
-
