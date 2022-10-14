@@ -72,7 +72,7 @@ class CentrifugalHeading(PresentationScene):
         ax = Axes(
             x_range=[0, 7, 1],
             y_range=[0, 4.5, 0.5],
-            x_length=11,
+            x_length=10,
             axis_config={"include_numbers": True},
         )
         x_label = ax.get_x_axis_label(r"t [s]", direction=3 * DOWN)
@@ -100,7 +100,7 @@ class CentrifugalHeading(PresentationScene):
         v_omega_r_eq.shift(UP * 3)
         self.play(Write(v_omega_r_eq))
         v_omega_r_eq.generate_target()
-        v_omega_r_eq.target.shift(LEFT * 4)
+        v_omega_r_eq.target.shift(RIGHT * 4.5)
         self.play(MoveToTarget(v_omega_r_eq))
         self.end_fragment()
 
