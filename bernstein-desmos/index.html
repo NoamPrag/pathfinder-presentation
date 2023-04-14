@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Bernstein Polynomials</title>
+
+        <link rel="stylesheet" href="./css/style.css" type="text/css" />
+    </head>
+
+
+    <body>
+        <div id="calculator"> </div>
+
+        <div id="container"> </div>
+
+    </body>
+    <script src="./js/calculator.js"></script>
+
+
+    <script>
+        var elt = document.getElementById('calculator');
+        var calculator = Desmos.GraphingCalculator(elt);
+
+        const useSpace = () => {
+            let spaceCounter = 0;
+            return () => {
+                spaceCounter++;
+                calculator.setExpression({ id: `s${spaceCounter}`, latex: " " })
+            }
+        };
+        const generateSpace = useSpace();
+
+        
+        const N_INITIAL_VALUE = 2;
+        calculator.setExpression({id:'n', latex:`n=${N_INITIAL_VALUE}`});
+        calculator.setExpression({id: 'n',sliderBounds: { min: 0, max: 10, step: 1 }});
+        
+        const I_INITIAL_VALUE = 0;
+        calculator.setExpression({id:'i', latex:`i=${I_INITIAL_VALUE}`});
+        const updateIRange = () => {
+            const nExpression = calculator.getState().expressions.list.find(el => el.id == "n");
+            const nValue = nExpression.latex.split("=")[1];
+            calculator.setExpression({id: 'i', sliderBounds: { min: 0, max: nValue, step: 1 }});
+        };
+        updateIRange();
+        calculator.observeEvent('change', updateIRange);
+
+        calculator.setExpression({id: 'l', latex: 'l=[0...n]'})
+        calculator.setExpression({
+            id: 'f',
+            latex: 'f\\left(t\\right)=\\operatorname{nCr}\\left(n,l\\right)t^{l}\\left(1-t\\right)^{\\left(n-l\\right)}\\left\\{0\\le t\\le1\\right\\}',
+            hidden: false,
+            color: Desmos.Colors.BLACK
+        });
+        
+        calculator.setExpression({
+            id: 'b',
+            latex: 'b\\left(t\\right)=\\operatorname{nCr}\\left(n,i\\right)t^{i}\\left(1-t\\right)^{\\left(n-i\\right)}\\left\\{0\\le t\\le1\\right\\}',
+            hidden: true,
+            color: Desmos.Colors.RED
+        });
+        calculator.setExpression({
+            id: 'g',
+            latex: 'g\\left(t\\right)=\\sum_{j=0}^{n}\\operatorname{nCr}\\left(n,j\\right)t^{j}\\left(1-t\\right)^{\\left(n-j\\right)}\\left\\{0\\le t\\le1\\right\\}',
+            hidden: true,
+            color: Desmos.Colors.PURPLE
+        });
+
+        generateSpace();
+        calculator.setExpression({
+            id: 'kpoints',
+            latex: '\\left(k,\\ f\\left(k\\right)\\right)',
+            hidden: true,
+            color: Desmos.Colors.RED
+        });
+        calculator.setExpression({
+            id: 'k',
+            latex: 'k=0',
+            sliderBounds: { min: 0, max: 1 }
+        });
+
+        // Derivatives:
+        generateSpace();
+        generateSpace();
+        calculator.setExpression({
+            id: "f'",
+            latex: "f'\\left(x\\right)",
+            hidden: true,
+            color: Desmos.Colors.GREEN
+        });
+        calculator.setExpression({
+            id: "b'",
+            latex: "b'\\left(x\\right)",
+            hidden: true,
+            color: Desmos.Colors.BLUE
+        });
+        calculator.setExpression({
+            id: "maximums",
+            latex: "x=\\frac{i}{n}",
+            hidden: true,
+            color: Desmos.Colors.ORANGE
+        });
+
+        // Integrals:
+        generateSpace();
+        generateSpace();
+        calculator.setExpression({
+            id: "bIntegral",
+            latex: "\\int_{0}^{1}b\\left(x\\right)dx",
+            hidden: true,
+        });
+        calculator.setExpression({
+            id: "integralValue",
+            latex: "\\frac{1}{n+1}",
+            hidden: true,
+        });
+        calculator.setExpression({
+            id: "fIntegrals",
+            latex: "\\int_{0}^{x}f\\left(t\\right)dt",
+            hidden: true,
+            color: Desmos.Colors.BLUE
+        });
+    </script>
+    <script src="./renderer.js"></script>
+</html>
