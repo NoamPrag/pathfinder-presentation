@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Bezier Curves</title>
+
+        <link rel="stylesheet" href="./css/style.css" type="text/css" />
+    </head>
+
+
+    <body>
+        <div id="calculator"> </div>
+
+        <div id="container"> </div>
+
+    </body>
+    <script src="./js/calculator.js"></script>
+
+
+    <script>
+        var elt = document.getElementById('calculator');
+        var calculator = Desmos.GraphingCalculator(elt);
+
+        const useSpace = () => {
+            let spaceCounter = 0;
+            return () => {
+                spaceCounter++;
+                calculator.setExpression({ id: `s${spaceCounter}`, latex: " " })
+            }
+        };
+        const generateSpace = useSpace();
+
+        const generate_coordinate = (label, defaultValue) => 
+          calculator.setExpression({
+            id: label,
+            latex: `${label}=${defaultValue}`,
+          });
+
+        const generate_point = (index) => 
+          calculator.setExpression({
+            id: `p${index}`,
+            latex: `\\left(x_{${index}},y_{${index}}\\right)`,
+              hidden: false,
+              color: Desmos.Colors.ORANGE
+          });
+        
+
+        calculator.setExpression({
+            id: 'b',
+            latex: 'b\\left(n,i,t\\right)=\\operatorname{nCr}\\left(n,i\\right)t^{i}\\left(1-t\\right)^{\\left(n-i\\right)}\\left\\{0\\le t\\le1\\right\\}',
+            hidden: false,
+        });
+        calculator.setExpression({
+            id: 'b0',
+            latex: 'b_{0}\\left(t\\right)=\\left(\\left(1-t\\right)\\left(\\left(1-t\\right)\\left(\\left(1-t\\right)x_{0}+tx_{1}\\right)+t\\left(\\left(1-t\\right)x_{1}+tx_{2}\\right)\\right)+t\\left(\\left(1-t\\right)\\left(\\left(1-t\\right)x_{1}+tx_{2}\\right)+t\\left(\\left(1-t\\right)x_{2}+tx_{3}\\right)\\right),\\left(1-t\\right)\\left(\\left(1-t\\right)\\left(\\left(1-t\\right)y_{0}+ty_{1}\\right)+t\\left(\\left(1-t\\right)y_{1}+ty_{2}\\right)\\right)+t\\left(\\left(1-t\\right)\\left(\\left(1-t\\right)y_{1}+ty_{2}\\right)+t\\left(\\left(1-t\\right)y_{2}+ty_{3}\\right)\\right)\\right)',
+            hidden: false,
+        });
+        calculator.setExpression({
+            id: 'b_0(t)',
+            latex: 'b_{0}\\left(t\\right)',
+            hidden: false,
+            color: Desmos.Colors.BLACK
+        });
+        
+        generateSpace();
+        calculator.setExpression({
+            id: 'd_x',
+            latex: 'd_x\\left(t\\right)=3\\left(b\\left(2,0,t\\right)\\left(x_1-x_0\\right)+b\\left(2,1,t\\right)\\left(x_2-x_1\\right)+b\\left(2,2,t\\right)\\left(x_3-x_2\\right)\\right)',
+            hidden: true,
+        });
+        calculator.setExpression({
+            id: 'd_y',
+            latex: 'd_y\\left(t\\right)=3\\left(b\\left(2,0,t\\right)\\left(y_1-y_0\\right)+b\\left(2,1,t\\right)\\left(y_2-y_1\\right)+b\\left(2,2,t\\right)\\left(y_3-y_2\\right)\\right)',
+            hidden: true,
+        });
+        calculator.setExpression({
+            id: 'd',
+            latex: 'd\\left(t\\right)=\\left(d_x\\left(t\\right),\\ d_y\\left(t\\right)\\right)',
+            hidden: false,
+        });
+        calculator.setExpression({
+            id: 'd(t)',
+            latex: 'd\\left(t\\right)',
+            hidden: true,
+            color: Desmos.Colors.BLUE
+        });
+        
+        generateSpace();
+        const MAX_N_POINTS = 100;
+        calculator.setExpression({
+            id: 'n_p',
+            latex: 'n_{p}=1',
+            sliderBounds: { min: 1, max: MAX_N_POINTS, step: 1 }
+        });
+        calculator.setExpression({
+            id: 'l',
+            latex: 'l=\\left[0,\\frac{1}{n_{p}}...1\\right]',
+        });
+        calculator.setExpression({
+            id: 'b_0(l)',
+            latex: 'b_{0}\\left(l\\right)',
+            hidden: true,
+            color: Desmos.Colors.PURPLE
+        });
+        
+        generateSpace();
+        calculator.setExpression({
+            id: 'd_1(t)',
+            latex: 'd_1\\left(t\\right)=\\int_0^t\\sqrt{d_x\\left(s\\right)^2+d_y\\left(s\\right)^2}ds\\ \\left\\{0\\le t\\le1\\right\\}',
+            hidden: true,
+            color: Desmos.Colors.RED
+        });
+        calculator.setExpression({
+            id: 'L',
+            latex: 'L=d_{1}\\left(1\\right)',
+        });
+
+        
+        generateSpace();
+        const xInterval = 0.6667;
+        const yInterval = 0.3333;
+        const bezier_initial_points = [{x: 0, y: 0}, {x: 0, y: yInterval}, {x: xInterval, y: yInterval}, {x: xInterval, y: 0}];
+        bezier_initial_points.forEach(({x, y}, index) => {
+          generate_coordinate(`x_{${index}}`, x);
+          generate_coordinate(`y_{${index}}`, y);
+          generate_point(index);
+        });
+
+    </script>
+    <script src="./renderer.js"></script>
+</html>
+
