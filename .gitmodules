@@ -1,0 +1,3 @@
+[submodule "swerve-demo"]
+	path = swerve-demo
+	url = git@github.com:NoamPrag/swerve-demo.git
